@@ -1,0 +1,79 @@
+# .gitignore for WinUI 3 / .NET projects
+# Build results
+bin/
+obj/
+[Bb]uild/
+[Bb]uilds/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Windows image file caches
+*.dbmdl
+*.pdb
+*.cache
+*.db
+
+# OS generated files
+[Tt]humbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.log
+*.vspscc
+*.vssscc
+
+# Rider
+.idea/
+*.sln.iml
+
+# NuGet
+*.nupkg
+# The packages folder can be ignored because of PackageReference
+**/packages/*
+!**/packages/build/
+!**/packages/repositories.config
+
+# Others
+*.swp
+*.bak
+*.tmp
+*.tmp_proj
+*.log
+*.vsix
+
+# Publish
+publish/
+
+# Windows Store app package directories
+AppPackages/
+BundleArtifacts/
+
+# Windows Store auto-generated files
+*.appx
+*.appxbundle
+*.appxupload
+*.eappx
+*.msix
+*.msixbundle
+*.msixupload
+
+# Local test results
+TestResults/
+
+# Dotnet tool restore
+.dotnet_toolstest/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# WinUI 3 specific
+*.VC.db
+*.VC.opendb
