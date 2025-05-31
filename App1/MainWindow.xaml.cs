@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -26,68 +27,87 @@ namespace App1
     /// </summary>
     public sealed partial class MainWindow : Window
     {
-        private const string V = "Running";
         Task? _task;
-        string _status = "Idle";
+        int _currentCount = 0;
+        int _counter = 0;
         public MainWindow()
         {
             InitializeComponent();
-          
+
         }
 
-        
+        public int CurrentCount;
+        //{
+        //    get => { _currentCount; }
+        //    set => {
+        //        _currentCount = value;
+        //        Debug.WriteLine("Current Count:" + _currentCount);
+        //    }
+        //}
 
-        private async void DoActionWhenNoBackgroundTask(string name, Action action)
+        private async void DoActionWhenNoBackgroundTask(Action action, Action onComplete = null)
         {
-            if(_task == null)
+            if (_task != null)
             {
-                Debug.WriteLine($"Calling action {name}");
-                await RunBackgraoundTask(name, action);
-                Debug.WriteLine($"Finish calling action {name}");
+                Debug.WriteLine("Background task is running, waiting for it to complete...");
+                await _task;
+                Debug.WriteLine("Task is completed");
             }
-            else
+            Debug.WriteLine("Task is null. Creating new background task ...");
+            _task = DispatcherQueue.RunBackground(action, () =>
             {
-                await Task.Delay(1000).ConfigureAwait(false);
-                await _task.ContinueWith(t =>
-                {
-                    Debug.WriteLine($"Retrying action {name} after task completion");
-                    DispatcherQueue.TryEnqueue(() => DoActionWhenNoBackgroundTask(name, action));
-                }).ConfigureAwait(false);
-
-            }
-        }
-
-        async Task RunBackgraoundTask(string name, Action action)
-        {
-            Debug.WriteLine($"Starting background task {name} ...");
-            _task = Task.Run(action);
-            await _task.ConfigureAwait(false);
-            Debug.WriteLine($"Complete task {name} ...");
-            DispatcherQueue.TryEnqueue(() =>
-            {
-                // Update UI after background task completion
-                Debug.WriteLine($"Cleaning task {name} ...");
                 _task = null;
+                onComplete?.Invoke();
             });
+            Debug.WriteLine("Task is is created ...");
+            //action();
+            //onComplete();
+
+
+            //if (_task == null)
+            //{
+
+
+            //}
+            //else
+            //{
+            //    await _task;
+            //    action();
+            //    onComplete();
+            //    //DoActionWhenNoBackgroundTask(action, onComplete);
+            //    //await DispatcherQueue.EnqueueAsync(() => DoActionWhenNoBackgroundTask(action, onComplete));
+
+            //}
         }
 
-        private void Start_Click(object sender, RoutedEventArgs e)
+        private async void Start_Click(object sender, RoutedEventArgs e)
         {
-            DoActionWhenNoBackgroundTask("START", () =>
+            var current = _counter++;
+            DoActionWhenNoBackgroundTask(() =>
             {
+
                 Debug.WriteLine($"Starting player ...");
                 Task.Delay(2000).Wait();
                 Debug.WriteLine($"Started player");
-            });
+            }, () => { CurrentCount = current; });
+            
         }
+
+        //private async Task TestConfigureAwaite() {
+        //    await Task.Delay(5000).ConfigureAwait(true);
+        //    Debug.WriteLine("Start Clicked");
+        //}
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
-            DoActionWhenNoBackgroundTask("STOP", () =>
+            //Debug.WriteLine("Stop Clicked");
+            var current = _counter++;
+            DoActionWhenNoBackgroundTask(() =>
             {
+
                 Debug.WriteLine($"Stopping player ...");
-                Task.Delay(3000).Wait();
+                Task.Delay(2000).Wait();
                 Debug.WriteLine($"Stopped player");
-            });
+            }, () => { CurrentCount = current; });
 
         }
     }
