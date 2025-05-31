@@ -8,6 +8,9 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -27,65 +30,38 @@ namespace App1
     /// </summary>
     public sealed partial class MainWindow : Window
     {
-        Task? _task;
-        int _currentCount = 0;
-        int _counter = 0;
+        private int counter = 0;
+        private int _currentCount = 0;
+        
+        public int CurrentCount
+        {
+            get => _currentCount;
+            set
+            {
+                var oldValue = _currentCount;
+                _currentCount = value;
+                Debug.WriteLine($"Current Count: {oldValue} -> {_currentCount}");
+            }
+        }
+        BackgroundTaskQueue backgroundTaskQueue;
         public MainWindow()
         {
             InitializeComponent();
+            this.Activated += MainWindow_Activated;
 
         }
 
-        public int CurrentCount;
-        //{
-        //    get => { _currentCount; }
-        //    set => {
-        //        _currentCount = value;
-        //        Debug.WriteLine("Current Count:" + _currentCount);
-        //    }
-        //}
-
-        private async void DoActionWhenNoBackgroundTask(Action action, Action onComplete = null)
+        private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
         {
-            if (_task != null)
-            {
-                Debug.WriteLine("Background task is running, waiting for it to complete...");
-                await _task;
-                Debug.WriteLine("Task is completed");
-            }
-            Debug.WriteLine("Task is null. Creating new background task ...");
-            _task = DispatcherQueue.RunBackground(action, () =>
-            {
-                _task = null;
-                onComplete?.Invoke();
-            });
-            Debug.WriteLine("Task is is created ...");
-            //action();
-            //onComplete();
-
-
-            //if (_task == null)
-            //{
-
-
-            //}
-            //else
-            //{
-            //    await _task;
-            //    action();
-            //    onComplete();
-            //    //DoActionWhenNoBackgroundTask(action, onComplete);
-            //    //await DispatcherQueue.EnqueueAsync(() => DoActionWhenNoBackgroundTask(action, onComplete));
-
-            //}
+            this.backgroundTaskQueue = DispatcherQueue.BackgroundTaskQueue();
         }
+
 
         private async void Start_Click(object sender, RoutedEventArgs e)
         {
-            var current = _counter++;
-            DoActionWhenNoBackgroundTask(() =>
+            var current = ++counter;
+            await this.backgroundTaskQueue.Enque(() =>
             {
-
                 Debug.WriteLine($"Starting player ...");
                 Task.Delay(2000).Wait();
                 Debug.WriteLine($"Started player");
@@ -93,22 +69,19 @@ namespace App1
             
         }
 
-        //private async Task TestConfigureAwaite() {
-        //    await Task.Delay(5000).ConfigureAwait(true);
-        //    Debug.WriteLine("Start Clicked");
-        //}
-        private void Stop_Click(object sender, RoutedEventArgs e)
+        private async void Stop_Click(object sender, RoutedEventArgs e)
         {
             //Debug.WriteLine("Stop Clicked");
-            var current = _counter++;
-            DoActionWhenNoBackgroundTask(() =>
+            var current = ++counter;
+            await this.backgroundTaskQueue.Enque(() =>
             {
-
                 Debug.WriteLine($"Stopping player ...");
                 Task.Delay(2000).Wait();
                 Debug.WriteLine($"Stopped player");
             }, () => { CurrentCount = current; });
 
         }
+
+       
     }
 }

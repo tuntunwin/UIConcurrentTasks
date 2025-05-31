@@ -7,26 +7,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  
     mc:Ignorable="d"  
-    Title="App1">  
+    Title="App1">
 
-    <Window.SystemBackdrop>  
-        <MicaBackdrop />  
-    </Window.SystemBackdrop>  
-
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">  
-        <Button  
-            Content="Start"  
-            HorizontalAlignment="Center"  
-            VerticalAlignment="Center"  
-            Width="200"  
-            Height="100"  
-            Click="Start_Click" />  
-        <Button  
-            Content="Stop"  
-            HorizontalAlignment="Center"  
-            VerticalAlignment="Center"  
-            Width="200"  
-            Height="100"  
-            Click="Stop_Click" />  
-    </StackPanel>  
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+    <local:PlayerList></local:PlayerList>
 </Window>
