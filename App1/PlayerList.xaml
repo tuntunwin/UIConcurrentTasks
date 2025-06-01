@@ -14,7 +14,7 @@
         <GridView ItemsSource="{Binding Devices}">
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <local:PlayerControl DeviceId="{Binding}" />
+                    <local:PlayerView DeviceId="{Binding}" />
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>

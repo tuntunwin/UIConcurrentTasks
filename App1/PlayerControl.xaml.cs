@@ -94,7 +94,7 @@ namespace App1
             this.player = null;
             this.backgroundTaskQueue = null;
 
-            await backgroundTaskQueue.Enque(player.Stop);
+            await backgroundTaskQueue.EnqueTask(player.Stop);
         }
 
         private async Task StartPlayer()
@@ -106,7 +106,7 @@ namespace App1
             Status = MediaPlayerStatus.Pending.ToString();
             player.StatusChanged += Player_StatusChanged;
             // Optionally, start playing automatically
-            await backgroundTaskQueue.Enque(player.Play);
+            await backgroundTaskQueue.EnqueTask(player.Play);
         }
 
         private async Task RestartPlayer()
@@ -122,7 +122,7 @@ namespace App1
             Status = "Retrying";
             player.StatusChanged += Player_StatusChanged;
             // Optionally, start playing automatically
-            await backgroundTaskQueue.Enque(player.Play);
+            await backgroundTaskQueue.EnqueTask(player.Play);
         }
 
         private async void Player_StatusChanged(object? sender, MediaPlayerStatus e)

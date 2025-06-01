@@ -60,7 +60,7 @@ namespace App1
         private async void Start_Click(object sender, RoutedEventArgs e)
         {
             var current = ++counter;
-            await this.backgroundTaskQueue.Enque(() =>
+            await this.backgroundTaskQueue.EnqueTask(() =>
             {
                 Debug.WriteLine($"Starting player ...");
                 Task.Delay(2000).Wait();
@@ -73,7 +73,7 @@ namespace App1
         {
             //Debug.WriteLine("Stop Clicked");
             var current = ++counter;
-            await this.backgroundTaskQueue.Enque(() =>
+            await this.backgroundTaskQueue.EnqueTask(() =>
             {
                 Debug.WriteLine($"Stopping player ...");
                 Task.Delay(2000).Wait();

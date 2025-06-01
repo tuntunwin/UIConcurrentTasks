@@ -23,7 +23,19 @@ namespace App1
             this.dispatcherQueue = dispatcherQueue;
         }
 
-        public async Task Enque(Action action, Action? onComplete = null)
+        public void EnsureAccess() {
+            if (!this.dispatcherQueue.HasThreadAccess) {
+                throw new InvalidOperationException("Invalid thread to acccess");
+            }
+        }
+        public void EnqueTaskNoWait(Action action, Action? onComplete = null) {
+            var _ = EnqueTask(action, onComplete);
+        }
+
+        public async void EnqueDispatcher(Action action) { 
+            await this.dispatcherQueue.EnqueueAsync(action);
+        }
+        public async Task EnqueTask(Action action, Action? onComplete = null)
         {
             Assert.True(this.dispatcherQueue.HasThreadAccess, "This method must be called on the DispatcherQueue thread.");
             while (this.task != null)

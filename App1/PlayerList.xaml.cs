@@ -39,8 +39,8 @@ namespace App1
 
         private void PageChange()
         {
-            int pageSize = 10;
-            Devices = Enumerable.Range(0, pageSize).Select(i => _currentPage * pageSize + i).Select(i => "Device " + i.ToString()).ToList();
+            int pageSize = 50;
+            Devices = Enumerable.Range(1, pageSize).Select(i => _currentPage * pageSize + i).Select(i => "Device " + i.ToString()).ToList();
             _currentPage++;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Devices)));
         }
