@@ -32,10 +32,33 @@ namespace App1
             var _ = EnqueTask(action, onComplete);
         }
 
+        public void EnqueDelayTask(int delay, Action onComplete)
+        {
+            var createTask = () => this.dispatcherQueue.RunDelay(delay, () =>
+            {
+                this.task = null;
+                onComplete?.Invoke();
+            });
+
+            var _ = EnqueTask(createTask);
+        }
+
         public async void EnqueDispatcher(Action action) { 
             await this.dispatcherQueue.EnqueueAsync(action);
         }
         public async Task EnqueTask(Action action, Action? onComplete = null)
+        {
+            var createTask = () => this.dispatcherQueue.RunBackground(action, () =>
+            {
+                this.task = null;
+                onComplete?.Invoke();
+            });
+            await EnqueTask(createTask);
+
+
+        }
+
+        public async Task EnqueTask(Func<Task> createTask)
         {
             Assert.True(this.dispatcherQueue.HasThreadAccess, "This method must be called on the DispatcherQueue thread.");
             while (this.task != null)
@@ -45,13 +68,9 @@ namespace App1
                 Logger.Debug("Awaite is completed");
             }
             Logger.Debug("Task is null. Creating new background task ...");
-            this.task = this.dispatcherQueue.RunBackground(action, () =>
-            {
-                this.task = null;
-                onComplete?.Invoke();
-            });
+            this.task = createTask();
             Logger.Debug("Task is is created ...");
-           
+
         }
     }
 }

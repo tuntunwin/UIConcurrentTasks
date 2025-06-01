@@ -47,6 +47,19 @@ namespace App1
             
         }
 
+        public static async Task RunDelay(this DispatcherQueue dispatcher, int delay, Action? onComplete)
+        {
+            await Task.Delay(delay).ConfigureAwait(false);
+            if (onComplete != null)
+            {
+                await dispatcher.EnqueueAsync(() =>
+                {
+                    onComplete();
+                });
+            }
+
+        }
+
         public static BackgroundTaskQueue BackgroundTaskQueue(this DispatcherQueue dispatcher) {
             return new BackgroundTaskQueue(dispatcher);
         }

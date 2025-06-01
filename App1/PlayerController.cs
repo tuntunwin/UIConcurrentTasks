@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace App1
 {
@@ -97,12 +98,15 @@ namespace App1
         private void ContinuePlay()
         {
             switch (currentStatus) {
-                case CurrentPlayerStatus.Idle: 
+                case CurrentPlayerStatus.Idle:
                     StartPlayer();
                     break;
 
-                case CurrentPlayerStatus.Starting:
                 case CurrentPlayerStatus.Restarting:
+                    StartPlayer(CurrentPlayerStatus.Restarting);
+                    break;
+
+                case CurrentPlayerStatus.Starting:
                 case CurrentPlayerStatus.Started:
                     //Wait until next schedule
                     break;
@@ -153,29 +157,26 @@ namespace App1
             }
         }
 
-        private void StartPlayer()
+        private void StartPlayer(CurrentPlayerStatus inprogrossStaus = CurrentPlayerStatus.Starting)
         {
+            NextCurrent(inprogrossStaus);
             this.backgroundTaskQueue.EnqueTaskNoWait(this.player.Play, () => this.NextCurrent(CurrentPlayerStatus.Started));
         }
 
         private void StopPlayer()
         {
+            NextCurrent(CurrentPlayerStatus.Stopping);
             this.backgroundTaskQueue.EnqueTaskNoWait(this.player.Stop, () => this.NextCurrent(CurrentPlayerStatus.Stopped));
         }
         private void HandleError()
         {
             if (TargetStatus == TargetPlayerStatus.Playing) {
-                StartPlayer();
+                this.backgroundTaskQueue.EnqueDelayTask(3000, () => this.NextCurrent(CurrentPlayerStatus.Restarting));
             }
             else if(TargetStatus == TargetPlayerStatus.Stopped)
             {
                 StopPlayer();
             }
         }
-
-        
-
-
-
     }
 }
