@@ -21,7 +21,7 @@ namespace App1
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger(); // Correctly declare and initialize the Logger field
         Random random = new Random();
-        private async Task RandomDelay() => await Task.Delay(random.Next(1000, 3000)); // Random delay between 1 and 5 seconds
+        private async Task RandomDelay() => await Task.Delay(random.Next(2000, 3000)); // Random delay between 1 and 5 seconds
         public event EventHandler<MediaPlayerStatus>? StatusChanged;
         bool isPlaying = false;
         Task playbackTask = null;

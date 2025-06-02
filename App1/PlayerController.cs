@@ -26,7 +26,7 @@ namespace App1
         Error
     }
 
-    public class PlayerController
+    public class PlayerController : IPlayerController
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private MediaPlayerSimulator player;

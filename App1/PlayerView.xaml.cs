@@ -55,7 +55,7 @@ namespace App1
         {
         }
 
-        private PlayerController controller;
+        private IPlayerController controller;
         public PlayerView()
         {
             InitializeComponent();
@@ -65,7 +65,7 @@ namespace App1
 
         private void PlayerView_Loaded(object sender, RoutedEventArgs e)
         {
-            this.controller = new PlayerController(DeviceId, new MediaPlayerSimulator(), DispatcherQueue.BackgroundTaskQueue());
+            this.controller = new SimplePlayerController(DeviceId, new MediaPlayerSimulator(), DispatcherQueue.BackgroundTaskQueue());
             this.controller.CurrentStatusChanged += Controller_CurrentStatusChanged;
             this.controller.NextTarget(TargetPlayerStatus.Playing);
         }
