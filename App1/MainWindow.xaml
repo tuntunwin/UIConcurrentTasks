@@ -12,5 +12,6 @@
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
-    <local:PlayerList></local:PlayerList>
+    <!--<local:PlayerList></local:PlayerList>-->
+    <local:SystemControl />
 </Window>
