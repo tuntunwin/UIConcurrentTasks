@@ -24,17 +24,17 @@ namespace App1
         private ManualSystemControlViewModel _manualViewModel;
         private BackgroundTaskQueue _backgroundTaskQueue;
         private Random _random = new Random();
-        
+
         // Note: These fields are actually defined in the generated code
         // private Slider VolumeSlider;
         // private bool _contentLoaded;
 
-        public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register(
-                nameof(ViewModel),
-                typeof(ISystemControlViewModel),
-                typeof(SystemControl),
-                new PropertyMetadata(null));
+        //public static readonly DependencyProperty ViewModelProperty =
+        //    DependencyProperty.Register(
+        //        nameof(ViewModel),
+        //        typeof(ISystemControlViewModel),
+        //        typeof(SystemControl),
+        //        new PropertyMetadata(null));
 
         public static readonly DependencyProperty ModeProperty =
             DependencyProperty.Register(
@@ -46,10 +46,14 @@ namespace App1
         /// <summary>
         /// Gets or sets the current view model
         /// </summary>
-        public ISystemControlViewModel ViewModel
+        private ISystemControlViewModel ViewModel
         {
-            get => (ISystemControlViewModel)GetValue(ViewModelProperty);
-            private set => SetValue(ViewModelProperty, value);
+            //get => (ISystemControlViewModel)GetValue(ViewModelProperty);
+            set
+            {
+                //SetValue(ViewModelProperty, value);
+                this.DataContext = value; // Set DataContext to the ViewModel
+            }
         }
 
         /// <summary>
